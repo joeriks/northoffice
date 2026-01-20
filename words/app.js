@@ -106,6 +106,97 @@ $(function () {
         await NorthFS.saveFile(fileName, parentPath, content);
     }
 
+    // Save to filesystem with dialog
+    async function saveToFilesystemDialog() {
+        if (typeof NorthFS === 'undefined') {
+            alert('Filsystemet är inte tillgängligt.');
+            return;
+        }
+
+        try {
+            await NorthFS.init();
+            await NorthFS.ensureRoot();
+
+            // Get all folders for the folder picker
+            const allFiles = await NorthFS.getAllFiles();
+            const folders = allFiles.filter(f => f.type === NorthFS.FILE_TYPES.FOLDER);
+
+            // Create modal HTML
+            const modalHtml = `
+                <div class="modal active" id="saveToFsModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Spara till filsystemet</h3>
+                            <button class="modal-close" id="closeSaveToFsModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="saveFileName">Filnamn</label>
+                                <input type="text" id="saveFileName" value="${$docTitle.val() || 'Namnlöst dokument'}.words" placeholder="dokument.words">
+                            </div>
+                            <div class="form-group">
+                                <label for="saveFolderPath">Mapp</label>
+                                <select id="saveFolderPath" class="toolbar-select" style="width: 100%; padding: 8px;">
+                                    <option value="/">/</option>
+                                    ${folders.map(f => `<option value="${f.path}">${f.path}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" id="cancelSaveToFs">Avbryt</button>
+                            <button class="btn btn-primary" id="confirmSaveToFs">Spara</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Remove any existing modal
+            $('#saveToFsModal').remove();
+            $('body').append(modalHtml);
+
+            // Handle cancel/close
+            $('#closeSaveToFsModal, #cancelSaveToFs').on('click', function () {
+                $('#saveToFsModal').remove();
+            });
+
+            // Handle save
+            $('#confirmSaveToFs').on('click', async function () {
+                let fileName = $('#saveFileName').val().trim();
+                const folderPath = $('#saveFolderPath').val();
+
+                if (!fileName) {
+                    alert('Ange ett filnamn.');
+                    return;
+                }
+
+                // Ensure .words extension
+                if (!fileName.endsWith('.words')) {
+                    fileName += '.words';
+                }
+
+                const content = {
+                    title: $docTitle.val(),
+                    html: $editor.html(),
+                    lastSaved: new Date().toISOString()
+                };
+
+                try {
+                    await NorthFS.saveFile(fileName, folderPath, content);
+                    state.currentFilePath = folderPath === '/' ? `/${fileName}` : `${folderPath}/${fileName}`;
+                    $saveStatus.html('<i class="fas fa-check-circle"></i> Sparad till filsystemet');
+                    $('#saveToFsModal').remove();
+                } catch (e) {
+                    console.error('Failed to save to filesystem:', e);
+                    alert('Kunde inte spara filen: ' + e.message);
+                }
+            });
+
+        } catch (e) {
+            console.error('Failed to open save dialog:', e);
+            alert('Kunde inte öppna sparadialogen: ' + e.message);
+        }
+    }
+
     function loadFromLocalStorage() {
         const saved = localStorage.getItem('northoffice-document');
         if (saved) {
@@ -394,6 +485,11 @@ $(function () {
         a.download = `${title}.html`;
         a.click();
         URL.revokeObjectURL(url);
+    });
+
+    // Save to filesystem
+    $('#saveToFsBtn').on('click', function () {
+        saveToFilesystemDialog();
     });
 
     // Export as text
