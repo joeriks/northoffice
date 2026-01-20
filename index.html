@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NorthOffice - En modern kontorssvit online med Words och Numbers">
+    <title>NorthOffice - Kontorssvit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --color-words: #6366f1;
+            --color-words-dark: #4f46e5;
+            --color-numbers: #10b981;
+            --color-numbers-dark: #059669;
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-text: #f1f5f9;
+            --color-text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            animation: bgMove 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgMove {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-5%, -5%) rotate(5deg);
+            }
+        }
+
+        /* Header */
+        header {
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--color-words) 0%, var(--color-numbers) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--color-words) 0%, var(--color-numbers) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-bottom: 64px;
+        }
+
+        /* App cards */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .app-card {
+            background: var(--color-surface);
+            border-radius: 24px;
+            padding: 48px 32px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .app-card.words::before {
+            background: linear-gradient(90deg, var(--color-words), #8b5cf6);
+        }
+
+        .app-card.numbers::before {
+            background: linear-gradient(90deg, var(--color-numbers), #06b6d4);
+        }
+
+        .app-card.data::before {
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+        }
+
+        .app-card.files::before {
+            background: linear-gradient(90deg, #f59e0b, #ea580c);
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .app-card:hover::before {
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .words .app-icon {
+            background: linear-gradient(135deg, var(--color-words) 0%, #8b5cf6 100%);
+            box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        .numbers .app-icon {
+            background: linear-gradient(135deg, var(--color-numbers) 0%, #06b6d4 100%);
+            box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.5);
+        }
+
+        .data .app-icon {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            box-shadow: 0 10px 40px -10px rgba(139, 92, 246, 0.5);
+        }
+
+        .files .app-icon {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.5);
+        }
+
+        .app-icon i {
+            color: white;
+        }
+
+        .app-card h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-card p {
+            color: var(--color-text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-card .arrow {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover .arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Features */
+        .features {
+            display: flex;
+            gap: 32px;
+            margin-top: 80px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+
+        .feature i {
+            color: var(--color-numbers);
+        }
+
+        /* Footer */
+        footer {
+            padding: 24px;
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 13px;
+        }
+
+        footer a {
+            color: var(--color-words);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 24px;
+            }
+
+            main {
+                padding: 24px;
+            }
+
+            .apps-grid {
+                gap: 24px;
+            }
+
+            .app-card {
+                padding: 32px 24px;
+            }
+
+            .features {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-mountain-sun"></i>
+            <span>NorthOffice</span>
+        </div>
+    </header>
+
+    <main>
+        <h1><span>NorthOffice</span></h1>
+        <p class="subtitle">open source office software — vibe coded with opus 4.5 using jquery 4.0 — just for fun</p>
+
+        <div class="apps-grid">
+            <a href="words/index.html" class="app-card words">
+                <div class="app-icon">
+                    <i class="fas fa-feather-alt"></i>
+                </div>
+                <h2>Words</h2>
+                <p>Kraftfullt ordbehandlingsprogram med formatering, bilder, tabeller och automatisk sparning.</p>
+                <div class="arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="numbers/index.html" class="app-card numbers">
+                <div class="app-icon">
+                    <i class="fas fa-table"></i>
+                </div>
+                <h2>Numbers</h2>
+                <p>Kalkylprogram med formler, funktioner, formatering och CSV-export. Beräkna allt!</p>
+                <div class="arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="data/index.html" class="app-card data">
+                <div class="app-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h2>Data</h2>
+                <p>Flexibel databashanterare med anpassningsbara tabeller, relationer och formulärvy.</p>
+                <div class="arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="files/index.html" class="app-card files">
+                <div class="app-icon">
+                    <i class="fas fa-folder-tree"></i>
+                </div>
+                <h2>Files</h2>
+                <p>Hantera dina dokument och kalkylark i ett virtuellt filsystem med mappar.</p>
+                <div class="arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Ingen registrering krävs</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Sparas automatiskt lokalt</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Mörkt & ljust tema</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Byggt med jQuery 4</span>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Byggt med ❤️ och <a href="https://jquery.com" target="_blank">jQuery 4.0.0</a></p>
+    </footer>
+</body>
+
+</html>

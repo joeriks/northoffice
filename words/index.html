@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NorthOffice - Ett modernt online-ordbehandlingsprogram byggt med jQuery 4">
+    <title>NorthOffice - Ordbehandling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header / Toolbar -->
+        <header class="app-header">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn" title="Tillbaka till NorthOffice">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="logo">
+                    <i class="fas fa-feather-alt"></i>
+                    <span>Words</span>
+                </div>
+                <div class="file-menu">
+                    <button class="menu-btn" id="newDocBtn" title="Nytt dokument">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Nytt</span>
+                    </button>
+                    <button class="menu-btn" id="openDocBtn" title="Öppna dokument">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Öppna</span>
+                    </button>
+                    <button class="menu-btn" id="saveDocBtn" title="Spara dokument">
+                        <i class="fas fa-save"></i>
+                        <span>Spara</span>
+                    </button>
+                    <button class="menu-btn" id="exportPdfBtn" title="Exportera som text">
+                        <i class="fas fa-file-export"></i>
+                        <span>Exportera</span>
+                    </button>
+                    <button class="menu-btn" id="printBtn" title="Skriv ut">
+                        <i class="fas fa-print"></i>
+                        <span>Skriv ut</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-center">
+                <input type="text" id="docTitle" class="doc-title-input" value="Namnlöst dokument"
+                    placeholder="Dokumentnamn">
+            </div>
+            <div class="header-right">
+                <div class="word-count">
+                    <span id="wordCount">0</span> ord
+                    <span class="separator">|</span>
+                    <span id="charCount">0</span> tecken
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Växla tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Formatting Toolbar -->
+        <div class="formatting-toolbar">
+            <div class="toolbar-section">
+                <select id="fontFamily" class="toolbar-select" title="Typsnitt">
+                    <option value="Inter">Inter</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                </select>
+                <select id="fontSize" class="toolbar-select" title="Storlek">
+                    <option value="12px">12</option>
+                    <option value="14px">14</option>
+                    <option value="16px" selected>16</option>
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="24px">24</option>
+                    <option value="28px">28</option>
+                    <option value="32px">32</option>
+                    <option value="36px">36</option>
+                    <option value="48px">48</option>
+                    <option value="64px">64</option>
+                </select>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <button class="format-btn" id="boldBtn" title="Fet (Ctrl+B)">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="format-btn" id="italicBtn" title="Kursiv (Ctrl+I)">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="format-btn" id="underlineBtn" title="Understruken (Ctrl+U)">
+                    <i class="fas fa-underline"></i>
+                </button>
+                <button class="format-btn" id="strikeBtn" title="Genomstruken">
+                    <i class="fas fa-strikethrough"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <div class="color-picker-wrapper">
+                    <button class="format-btn color-btn" id="textColorBtn" title="Textfärg">
+                        <i class="fas fa-font"></i>
+                        <div class="color-indicator" id="textColorIndicator"></div>
+                    </button>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+                <div class="color-picker-wrapper">
+                    <button class="format-btn color-btn" id="bgColorBtn" title="Bakgrundsfärg">
+                        <i class="fas fa-highlighter"></i>
+                        <div class="color-indicator" id="bgColorIndicator" style="background: #ffff00;"></div>
+                    </button>
+                    <input type="color" id="bgColor" value="#ffff00">
+                </div>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <button class="format-btn" id="alignLeftBtn" title="Vänsterjustera">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="format-btn" id="alignCenterBtn" title="Centrera">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button class="format-btn" id="alignRightBtn" title="Högerjustera">
+                    <i class="fas fa-align-right"></i>
+                </button>
+                <button class="format-btn" id="alignJustifyBtn" title="Marginaljustera">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <button class="format-btn" id="ulBtn" title="Punktlista">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <button class="format-btn" id="olBtn" title="Numrerad lista">
+                    <i class="fas fa-list-ol"></i>
+                </button>
+                <button class="format-btn" id="indentBtn" title="Öka indrag">
+                    <i class="fas fa-indent"></i>
+                </button>
+                <button class="format-btn" id="outdentBtn" title="Minska indrag">
+                    <i class="fas fa-outdent"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <button class="format-btn" id="linkBtn" title="Infoga länk">
+                    <i class="fas fa-link"></i>
+                </button>
+                <button class="format-btn" id="imageBtn" title="Infoga bild">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="format-btn" id="tableBtn" title="Infoga tabell">
+                    <i class="fas fa-table"></i>
+                </button>
+                <button class="format-btn" id="hrBtn" title="Horisontell linje">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-section">
+                <button class="format-btn" id="undoBtn" title="Ångra (Ctrl+Z)">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="format-btn" id="redoBtn" title="Gör om (Ctrl+Y)">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="format-btn" id="clearFormatBtn" title="Rensa formatering">
+                    <i class="fas fa-eraser"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Editor Area -->
+        <main class="editor-container">
+            <div class="editor-wrapper">
+                <div class="page-container">
+                    <div id="editor" class="editor" contenteditable="true" spellcheck="true"
+                        data-placeholder="Börja skriva här..."></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span class="status-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="saveStatus">Alla ändringar sparade</span>
+                </span>
+            </div>
+            <div class="status-center">
+                <span class="status-item" id="zoomLevel">100%</span>
+            </div>
+            <div class="status-right">
+                <button class="zoom-btn" id="zoomOutBtn" title="Zooma ut">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <input type="range" id="zoomSlider" min="50" max="200" value="100" class="zoom-slider">
+                <button class="zoom-btn" id="zoomInBtn" title="Zooma in">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for Links -->
+    <div class="modal" id="linkModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Infoga länk</h3>
+                <button class="modal-close" id="closeLinkModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="linkText">Länktext</label>
+                    <input type="text" id="linkText" placeholder="Skriv länktext...">
+                </div>
+                <div class="form-group">
+                    <label for="linkUrl">URL</label>
+                    <input type="url" id="linkUrl" placeholder="https://example.com">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLink">Avbryt</button>
+                <button class="btn btn-primary" id="insertLink">Infoga</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Images -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Infoga bild</h3>
+                <button class="modal-close" id="closeImageModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="imageUrl">Bild-URL</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="imageAlt">Alt-text</label>
+                    <input type="text" id="imageAlt" placeholder="Beskrivning av bilden">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelImage">Avbryt</button>
+                <button class="btn btn-primary" id="insertImage">Infoga</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Tables -->
+    <div class="modal" id="tableModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Infoga tabell</h3>
+                <button class="modal-close" id="closeTableModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tableRows">Rader</label>
+                        <input type="number" id="tableRows" value="3" min="1" max="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="tableCols">Kolumner</label>
+                        <input type="number" id="tableCols" value="3" min="1" max="10">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelTable">Avbryt</button>
+                <button class="btn btn-primary" id="insertTable">Infoga</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for opening documents -->
+    <input type="file" id="fileInput" accept=".html,.txt" style="display: none;">
+
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script src="../shared/filesystem.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Data - En flexibel databasapplikation med tabelldesigner och relationer">
+    <title>Data - Databashanterare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn" title="Tillbaka till NorthOffice">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="logo">
+                    <i class="fas fa-database"></i>
+                    <span>Data</span>
+                </div>
+                <div class="file-menu">
+                    <button class="menu-btn" id="newDbBtn" title="Ny databas">
+                        <i class="fas fa-plus"></i>
+                        <span>Ny tabell</span>
+                    </button>
+                    <button class="menu-btn" id="importBtn" title="Importera">
+                        <i class="fas fa-file-import"></i>
+                        <span>Importera</span>
+                    </button>
+                    <button class="menu-btn" id="exportBtn" title="Exportera">
+                        <i class="fas fa-file-export"></i>
+                        <span>Exportera</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1 class="app-title">Databashanterare</h1>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" title="Växla tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar - Table List -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-layer-group"></i> Tabeller</h2>
+                    <button class="add-table-btn" id="addTableBtn" title="Lägg till tabell">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="table-list" id="tableList">
+                    <!-- Tables will be rendered here -->
+                </div>
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-project-diagram"></i> Relationer</h3>
+                    <button class="add-relation-btn" id="addRelationBtn" title="Lägg till relation">
+                        <i class="fas fa-plus"></i> Ny relation
+                    </button>
+                    <div class="relation-list" id="relationList">
+                        <!-- Relations will be rendered here -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h2>Välkommen till Data</h2>
+                    <p>Skapa och hantera dina databastabeller med lätthet.</p>
+                    <div class="welcome-actions">
+                        <button class="primary-btn" id="welcomeNewTableBtn">
+                            <i class="fas fa-plus"></i> Skapa din första tabell
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Designer View -->
+                <div class="table-designer hidden" id="tableDesigner">
+                    <div class="designer-header">
+                        <div class="designer-title">
+                            <i class="fas fa-pencil-ruler"></i>
+                            <input type="text" id="tableNameInput" placeholder="Tabellnamn" value="">
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="designViewBtn" title="Designvy">
+                                <i class="fas fa-cogs"></i> Design
+                            </button>
+                            <button class="view-btn" id="formViewBtn" title="Formulärvy">
+                                <i class="fas fa-wpforms"></i> Formulär
+                            </button>
+                            <button class="view-btn" id="tableViewBtn" title="Tabellvy">
+                                <i class="fas fa-table"></i> Tabell
+                            </button>
+                            <div class="view-divider"></div>
+                            <button class="edit-mode-btn" id="editModeBtn" title="Redigera struktur">
+                                <i class="fas fa-edit"></i> Redigera
+                            </button>
+                        </div>
+                        <div class="designer-actions">
+                            <button class="save-btn" id="saveTableBtn">
+                                <i class="fas fa-save"></i> Spara
+                            </button>
+                            <button class="delete-btn" id="deleteTableBtn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Design View -->
+                    <div class="design-view" id="designView">
+                        <div class="fields-header">
+                            <span class="col-name">Fältnamn</span>
+                            <span class="col-type">Typ</span>
+                            <span class="col-required">Obligatorisk</span>
+                            <span class="col-default">Standardvärde</span>
+                            <span class="col-actions">Åtgärder</span>
+                        </div>
+                        <div class="fields-list" id="fieldsList">
+                            <!-- Fields will be rendered here -->
+                        </div>
+                        <button class="add-field-btn" id="addFieldBtn">
+                            <i class="fas fa-plus"></i> Lägg till fält
+                        </button>
+                    </div>
+
+                    <!-- Form View -->
+                    <div class="form-view hidden" id="formView">
+                        <div class="form-navigation">
+                            <button class="nav-btn" id="prevRecordBtn" title="Föregående post">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="record-indicator" id="recordIndicator">Post 0 av 0</span>
+                            <button class="nav-btn" id="nextRecordBtn" title="Nästa post">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="nav-btn add" id="newRecordBtn" title="Ny post">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="nav-btn delete" id="deleteRecordBtn" title="Ta bort post">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="form-container" id="formContainer">
+                            <!-- Form fields will be rendered here -->
+                        </div>
+                        <div class="form-actions">
+                            <button class="save-btn" id="saveRecordBtn">
+                                <i class="fas fa-save"></i> Spara post
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Table View (Data Grid) -->
+                    <div class="data-table-view hidden" id="dataTableView">
+                        <div class="table-toolbar">
+                            <button class="toolbar-btn" id="addRowBtn">
+                                <i class="fas fa-plus"></i> Ny rad
+                            </button>
+                            <button class="toolbar-btn" id="deleteRowBtn">
+                                <i class="fas fa-trash"></i> Ta bort valda
+                            </button>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Sök...">
+                            </div>
+                        </div>
+                        <div class="data-grid-container">
+                            <table class="data-grid" id="dataGrid">
+                                <thead id="dataGridHead"></thead>
+                                <tbody id="dataGridBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <span id="rowCount">0 poster</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span class="status-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="saveStatus">Redo</span>
+                </span>
+            </div>
+            <div class="status-center">
+                <span class="status-item" id="tableInfo">Ingen tabell vald</span>
+            </div>
+            <div class="status-right">
+                <span class="status-item"><i class="fas fa-database"></i> <span id="dbSize">0</span> tabeller</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <!-- Relation Modal -->
+    <div class="modal-overlay hidden" id="relationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-project-diagram"></i> Skapa relation</h3>
+                <button class="modal-close" id="closeRelationModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Från tabell</label>
+                    <select id="fromTable"></select>
+                </div>
+                <div class="form-group">
+                    <label>Från fält</label>
+                    <select id="fromField"></select>
+                </div>
+                <div class="form-group">
+                    <label>Relationstyp</label>
+                    <select id="relationType">
+                        <option value="one-to-one">En till en</option>
+                        <option value="one-to-many">En till många</option>
+                        <option value="many-to-many">Många till många</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Till tabell</label>
+                    <select id="toTable"></select>
+                </div>
+                <div class="form-group">
+                    <label>Till fält</label>
+                    <select id="toField"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="cancelRelation">Avbryt</button>
+                <button class="primary-btn" id="saveRelation">Spara relation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay hidden" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-import"></i> Importera data</h3>
+                <button class="modal-close" id="closeImportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-dropzone" id="importDropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Dra och släpp en JSON-fil här</p>
+                    <p>eller</p>
+                    <input type="file" id="importFileInput" accept=".json" hidden>
+                    <button class="secondary-btn" id="browseFileBtn">Välj fil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script src="https://unpkg.com/dexie@4.0.10/dist/dexie.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

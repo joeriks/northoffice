@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Files - Filhanterare för NorthOffice">
+    <title>Files - Filhanterare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn" title="Tillbaka">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="logo">
+                    <i class="fas fa-folder-tree"></i>
+                    <span>Files</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item" data-path="/">Root</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Sök filer...">
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Växla tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button class="tool-btn" id="newFolderBtn" title="Ny mapp">
+                    <i class="fas fa-folder-plus"></i>
+                    <span>Ny mapp</span>
+                </button>
+                <button class="tool-btn" id="newWordsBtn" title="Nytt Words-dokument">
+                    <i class="fas fa-file-word"></i>
+                    <span>Nytt dokument</span>
+                </button>
+                <button class="tool-btn" id="newNumbersBtn" title="Nytt Numbers-ark">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Nytt kalkylark</span>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="tool-btn" id="renameBtn" title="Byt namn" disabled>
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="tool-btn danger" id="deleteBtn" title="Ta bort" disabled>
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="toolbar-right">
+                <button class="view-btn active" id="gridViewBtn" title="Rutnät">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="view-btn" id="listViewBtn" title="Lista">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="files-container">
+            <div class="files-grid" id="filesGrid">
+                <!-- Files will be rendered here -->
+            </div>
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-folder-open"></i>
+                <h3>Mappen är tom</h3>
+                <p>Skapa en ny mapp eller fil för att komma igång</p>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span id="itemCount">0 objekt</span>
+            </div>
+            <div class="status-right">
+                <span id="selectedInfo"></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <button class="context-item" id="ctxOpen"><i class="fas fa-external-link-alt"></i> Öppna</button>
+        <button class="context-item" id="ctxRename"><i class="fas fa-pen"></i> Byt namn</button>
+        <div class="context-divider"></div>
+        <button class="context-item danger" id="ctxDelete"><i class="fas fa-trash"></i> Ta bort</button>
+    </div>
+
+    <!-- New Folder Modal -->
+    <div class="modal" id="newFolderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ny mapp</h3>
+                <button class="modal-close" id="closeNewFolder">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="folderName">Mappnamn</label>
+                    <input type="text" id="folderName" placeholder="Ny mapp">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNewFolder">Avbryt</button>
+                <button class="btn btn-primary" id="confirmNewFolder">Skapa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div class="modal" id="renameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Byt namn</h3>
+                <button class="modal-close" id="closeRename">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newName">Nytt namn</label>
+                    <input type="text" id="newName" placeholder="Namn">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRename">Avbryt</button>
+                <button class="btn btn-primary" id="confirmRename">Byt namn</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ta bort</h3>
+                <button class="modal-close" id="closeDelete">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Är du säker på att du vill ta bort denna fil?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelDelete">Avbryt</button>
+                <button class="btn btn-danger" id="confirmDelete">Ta bort</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script src="../shared/filesystem.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

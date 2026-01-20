@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Numbers - Ett modernt online-kalkylprogram byggt med jQuery 4">
+    <title>Numbers - Kalkylark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn" title="Tillbaka till NorthOffice">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="logo">
+                    <i class="fas fa-table"></i>
+                    <span>Numbers</span>
+                </div>
+                <div class="file-menu">
+                    <button class="menu-btn" id="newSheetBtn" title="Nytt ark">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Nytt</span>
+                    </button>
+                    <button class="menu-btn" id="saveSheetBtn" title="Spara">
+                        <i class="fas fa-save"></i>
+                        <span>Spara</span>
+                    </button>
+                    <button class="menu-btn" id="exportCsvBtn" title="Exportera CSV">
+                        <i class="fas fa-file-csv"></i>
+                        <span>CSV</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-center">
+                <input type="text" id="sheetTitle" class="sheet-title-input" value="Namnlöst kalkylark"
+                    placeholder="Namn">
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" title="Växla tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Formula Bar -->
+        <div class="formula-bar">
+            <div class="cell-reference" id="cellReference">A1</div>
+            <div class="formula-icon"><i class="fas fa-function"></i></div>
+            <input type="text" id="formulaInput" class="formula-input"
+                placeholder="Ange värde eller formel (börja med =)">
+        </div>
+
+        <!-- Toolbar -->
+        <div class="formatting-toolbar">
+            <div class="toolbar-section">
+                <select id="fontFamily" class="toolbar-select">
+                    <option value="Inter">Inter</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Courier New">Courier New</option>
+                </select>
+                <select id="fontSize" class="toolbar-select">
+                    <option value="10">10</option>
+                    <option value="12" selected>12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <button class="format-btn" id="boldBtn" title="Fet"><i class="fas fa-bold"></i></button>
+                <button class="format-btn" id="italicBtn" title="Kursiv"><i class="fas fa-italic"></i></button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <div class="color-picker-wrapper">
+                    <button class="format-btn" id="textColorBtn" title="Textfärg">
+                        <i class="fas fa-font"></i>
+                        <div class="color-indicator" style="background:#000"></div>
+                    </button>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+                <div class="color-picker-wrapper">
+                    <button class="format-btn" id="bgColorBtn" title="Bakgrundsfärg">
+                        <i class="fas fa-fill-drip"></i>
+                        <div class="color-indicator" style="background:#fff"></div>
+                    </button>
+                    <input type="color" id="bgColor" value="#ffffff">
+                </div>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <button class="format-btn" id="alignLeftBtn" title="Vänster"><i class="fas fa-align-left"></i></button>
+                <button class="format-btn" id="alignCenterBtn" title="Centrera"><i
+                        class="fas fa-align-center"></i></button>
+                <button class="format-btn" id="alignRightBtn" title="Höger"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <button class="format-btn" id="formatNumberBtn" title="Talformat"><i
+                        class="fas fa-hashtag"></i></button>
+                <button class="format-btn" id="formatCurrencyBtn" title="Valuta"><i
+                        class="fas fa-dollar-sign"></i></button>
+                <button class="format-btn" id="formatPercentBtn" title="Procent"><i class="fas fa-percent"></i></button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <button class="format-btn" id="addRowBtn" title="Lägg till rad"><i class="fas fa-plus"></i> Rad</button>
+                <button class="format-btn" id="addColBtn" title="Lägg till kolumn"><i class="fas fa-plus"></i>
+                    Kol</button>
+                <button class="format-btn" id="deleteRowBtn" title="Ta bort rad"><i class="fas fa-minus"></i>
+                    Rad</button>
+                <button class="format-btn" id="deleteColBtn" title="Ta bort kolumn"><i class="fas fa-minus"></i>
+                    Kol</button>
+            </div>
+        </div>
+
+        <!-- Spreadsheet Area -->
+        <main class="spreadsheet-container">
+            <div class="spreadsheet-wrapper">
+                <table class="spreadsheet" id="spreadsheet">
+                    <thead id="spreadsheetHead"></thead>
+                    <tbody id="spreadsheetBody"></tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span class="status-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="saveStatus">Redo</span>
+                </span>
+            </div>
+            <div class="status-center">
+                <span class="status-item" id="selectionInfo">Markerad: A1</span>
+            </div>
+            <div class="status-right">
+                <span class="status-item">SUM: <span id="statusSum">0</span></span>
+                <span class="status-item">AVG: <span id="statusAvg">0</span></span>
+                <span class="status-item">COUNT: <span id="statusCount">0</span></span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script src="../shared/filesystem.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
